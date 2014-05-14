@@ -1,75 +1,74 @@
 Wheel PHP
 =========
-#Variables globales#
-+ (str)	**$_['version']**		  Framework version
-+ (array)	**$_['config']**		Configuration variables
-+ (array)	**$_[‘log’]**	      Used for debug only, list of all actions made
-+ (obj)	**$_[‘controller’]**	Main controller handler
-+ (obj)	**$_[‘db’]**		      Database handler
-+ (obj)	**$_[‘database’]**	  Alias for database handler
-+ (obj)	**$_[‘session’]**		  Easy-access object to session vars
-+ (obj)	**$_[‘cookie’]**		  Easy-access object to cookies vars
-+ (obj)	**$_[‘error’]**		    Error-system handler
+#Global $_ variable#
++ (str)	**$\_['version']**		  Framework version
++ (array)	**$\_['config']**		Configuration variables
++ (array)	**$\_[‘log’]**	      Used for debug only, list of all actions made
++ (obj)	**$\_[‘controller’]**	Main controller handler
++ (obj)	**$\_[‘db’]**		      Database handler
++ (obj)	**$\_[‘database’]**	  Alias for database handler
++ (obj)	**$\_[‘session’]**		  Easy-access object to session vars
++ (obj)	**$\_[‘cookie’]**		  Easy-access object to cookies vars
++ (obj)	**$\_[‘error’]**		    Error-system handler
 
-From controllers, $_[xxx] may be replaced by $this->xxx.
-#Méthodes d’accès à la base de données#
+From controllers, **$_[xxx]** may be replaced by **$this->xxx**.
 
-Foreign keys must be named like *tableName* _ *fieldName*
+#Database access methods#
 
-##Connect to the Database (automatic if autoLoad configured)##
-+ **$_[‘db’]->connect( [**$databaseConfigName**] );**
+Foreign keys must be named like *tableName* \_ *fieldName*
+
+##Connect to the Database##
+
+Automatic if autoLoad configured
+
++ **$\_[‘db’]->connect( [ ** $databaseConfigName ** ] ); **
 
 ##Execute SQL query directly##
-+ **$_[‘db’]->**tableName**->sql( **$sql** );**
++ **$\_[‘db’]-> ** tableName ** ->sql( ** $sql ** ); **
 
 ##Select##
-+ **$_[‘db’]->**tableName**->select( [**$options**] );**
->	$options = array(
->		‘fields’ => "* ",
->		‘conditions’ => " ",
->		‘order’ => " id ASC ",
->		‘limit’ => " 50 "
->	);
-+ **$_[‘db’]->**tableName**->selectFirst( [**$options**] );**
++ **$_[‘db’]->**tableName**->select( [ ** $options ** ] ); **
+>	$options may contains : ‘fields’, ‘conditions’, ‘order’, limit
++ **$_[‘db’]->**tableName**->selectFirst( [**$options**] ); **
 >	$options may contains : ‘fields’, ‘conditions’, ‘order’
 
-+ **$_[‘db’]->**tableName**->selectBy**Field**( **$valueOfField** [, **$options** ] );**
++ **$_[‘db’]->**tableName**->selectBy**Field**( **$valueOfField** [, **$options** ] ); **
 >	$options may contains : ‘fields’, ‘order’, ‘limit’
-+ **$_[‘db’]->**tableName**->selectFirstByField( **$valueOfField** [, **$options** ] );**
++ **$_[‘db’]->**tableName**->selectFirstByField( **$valueOfField** [, **$options** ] ); **
 >	$options may contains : ‘fields’, ‘order’
-+ **$_[‘db’]->**tableName**( **$id** );**			*// shortcut for ->selectFirstById($id);*
++ **$_[‘db’]->**tableName**( **$id** );**			*// shortcut for ->selectFirstById($id); *
 
 ##Update##
-+ **$_[‘db’]->**tableName**->update( **$varName**, **$value** [, **$options** ] );**
++ **$_[‘db’]->**tableName**->update( **$varName**, **$value** [, **$options** ] ); **
 >	$options may contains ‘conditions’, ‘order’, ‘limit’
-+ **$_[‘db’]->**tableName**->updateFirst( **$varName**, **$value** [, **$options** ] );**
++ **$_[‘db’]->**tableName**->updateFirst( **$varName**, **$value** [, **$options** ] ); **
 >	$options may contains ‘conditions’, ‘order’
-+ **$_[‘db’]->**tableName**->updateBy**Field**( **$valueOfField**, **$varName**, **$value** [, **$options** ] );**
++ **$_[‘db’]->**tableName**->updateBy**Field**( **$valueOfField**, **$varName**, **$value** [, **$options** ] ); **
 >	$options may contains ‘order’, ‘limit’
-+ **$_[‘db’]->**tableName**->updateFirstBy**Field**( **$valueOfField**, **$varName**, **$value** [, **$options** ] );**
++ **$_[‘db’]->**tableName**->updateFirstBy**Field**( **$valueOfField**, **$varName**, **$value** [, **$options** ] ); **
 >	$options may contains ‘order’
 
 ##Delete##
 + **$_[‘db’]->**tableName**->delete( [ **$options** ] );**
->	$options may contains ‘conditions’, ‘order’, ‘limit’ (limit = 1 by default to prevent sh*t to happends)
-+ **$_[‘db’]->**tableName**->deleteBy**Field**( **$valueOfField** [, **$options** ] );**
+>	$options may contains ‘conditions’, ‘order’, ‘limit’ (limit = 1 by default to prevent sh\*t to happends)
++ **$_[‘db’]->**tableName**->deleteBy**Field**( **$valueOfField** [, **$options** ] ); **
 >	$options may contains ‘order’, ‘limit’ (limit = 1 by default to prevent sh*t to happends)
 
 ##New from array##
-+ **$_[‘db’]->**tableName**->new( **$arrayOfValues** );**
++ **$_[‘db’]->**tableName**->new( **$arrayOfValues** ); **
 
 The select methods return array containing objects (see below) or return only one object if "selectFirst"
 #Database select result object#
 ##Get the value of field##
-+ **echo $**resultObject**->get( **$fieldName** );**
-+ **echo $**resultObject**->**field**;**
++ **echo $**resultObject**->get( **$fieldName** ); **
++ **echo $**resultObject**->**field**; **
 
 ##Set the value of field##
-+ **$**resultObject**->**field** = **$newValue**;**
-+ **$**resultObject**->set( **$fieldName**, **$newValue** );**
++ **$**resultObject**->**field** = **$newValue**; **
++ **$**resultObject**->set( **$fieldName**, **$newValue** ); **
 
 ##Delete from the database##
-+ **$**resultObject**->delete();**
++ **$**resultObject**->delete(); **
 
 #Error and logs#
 ##Select a view for errors##
@@ -77,10 +76,10 @@ The select methods return array containing objects (see below) or return only on
 
 ##Log an error##
 Stop all, just show the error.
-+ **$_[‘error’]->fatal( **$errDebugDescription** [, **$userMessage** ]);**
++ **$_[‘error’]->fatal( **$errDebugDescription** [, **$userMessage** ]); **
 
 Show error, and try to continue.
-+ **$_[‘error’]->error( **$errDebugDescription** [, **$userMessage** ]);**
++ **$_[‘error’]->error( **$errDebugDescription** [, **$userMessage** ]); **
 
 Just a warning.
 + **$_[‘error’]->info( **$errDebugDescription** );**
@@ -90,7 +89,7 @@ Just a warning.
 
 ##Flash errors for user##
 Create new flash error
-+ **$_[‘error’]->flash( **$userMessage** [, **$styleClass** ] );**
++ **$_[‘error’]->flash( **$userMessage** [, **$styleClass** ] ); **
 
 Show all flash recieved since the last showFlash() for the user.
-+ **$_[‘error’]->showFlash();**
++ **$_[‘error’]->showFlash(); **
