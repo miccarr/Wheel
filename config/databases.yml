@@ -1,9 +1,10 @@
-#   WHEEL > Config > Core
-#   ---------------------
+#   WHEEL > Config > Databases
+#   --------------------------
 #
 #   Databases configuration
 
 # Name of the default configuration
+# If empty, no autoLoad
 defaultConfig: 'default'
 
 # Configurations ------------------

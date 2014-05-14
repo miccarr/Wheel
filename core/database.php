@@ -5,20 +5,17 @@
 	//	Creates a magic connection to the database.
 	*/
 
-	// Main class instencied in $_['db']
+	// Main class
 	class wheel_DatabaseConnect {
 		private $handler;
 
-		public function __construct(){
-			$this->connect();
+		public function __construct($configName){
+			$this->connect($configName);
 		}
 
 		// Try to connect to the database
 		public function connect($configName = null){
 			global $_;
-
-			if( empty($configName) )
-				$configName = $_['config']['databases']['defaultConfig'];
 
 			if(isset($_['config']['databases'][$configName])){
 				$config = new wheel_DatabaseConfig($_['config']['databases'][$configName]);
@@ -92,8 +89,11 @@
 		private $_identifier;
 
 		public function __construct(&$model, $array){
-			$this->_rawDataArray = $array;			// Put the array result in private property
-			$this->_tableName = $model->tableName();		// Save the table name;
+			foreach($array as $varName => $value){			// Put the array result in private property
+				$varName = strtolower($varName);				// All to lowercase to simplify
+				$this->_rawDataArray[$varName] = $value;	
+			}
+			$this->_tableName = $model->tableName();			// Save the table name;
 			$this->_primaryKey = $this->_model->primaryKey();
 			$this->_identifier = $id = $this->_rawDataArray[ $this->_primaryKey ];
 		}
@@ -104,6 +104,7 @@
 			if( strcontains($varName, '_') ) {		// If it's an external reference to another table
 				$table, $field = explode('_', $varName, 2);		// Get the tablename and the field
 				if(empty($this->_externals[$table])){
+					$varName = strtolower($varName);			// All to lowercase to simplify
 					$value = $this->_rawDataArray[$varName];
 					$field = "selectBy".$field;
 					$this->_externals[$table] = &$_['db']->$table->$field($value);
@@ -120,8 +121,11 @@
 			$table = $this->_tableName;
 			$primKey = $this->_primaryKey;
 			$id = $this->_identifier;
+			$varName = strtolower($varName);			// All to lowercase to simplify
 
-			$_['db']->sql("UPDATE $table SET $varName = $value WHERE `$primKey` = $id LIMIT 1");
+			$value = mysqli_escape_string($value);		// Avoid SQL injections
+
+			$_['db']->sql("UPDATE $table SET `$varName` = '$value' WHERE `$primKey` = $id LIMIT 1");
 
 			$this->_rawDataArray[$varName] = $value;
 
@@ -165,17 +169,24 @@
 		public function __call($methodName, $arg){
 			// GetVariable();
 			if(startWith($methodName, 'get')){
-				return $this->get( strtolower($methodName[3]) . substr($methodName, 4) );
+				$varName =  substr($methodName, 3);	// Remove the "get" to find varName
+				return $this->get( $varName );
 			}
 
 			// SetVariable();
 			elseif(startWith($methodName, 'set')){
-				return $this->set( strtolower($methodName[3]) . substr($methodName, 4), $arg[0]);
+				$varName =  substr($methodName, 3);	// Remove the "set" to find varName
+				return $this->set( $varName, $arg[0]);
 			}
 		}
 	}
 
 
-	$_['db'] = new wheel_DatabaseConnect();
-	$_['DB'] = &$_['db'];
-	$_['database'] = &$_['db'];
+	// Load default config
+	if(!empty($_['config']['databases']['defaultConfig'])){
+		$_['db'] = new wheel_DatabaseConnect($_['config']['databases']['defaultConfig']);
+		$_['DB'] = &$_['db'];
+		$_['database'] = &$_['db'];
+	}else{
+		$_["error"]->info("WHEEL : No default database config, no autoLoad .");
+	}

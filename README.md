@@ -112,6 +112,9 @@ Create new flash error
 Show all flash recieved since the last showFlash() for the user.
 + **$_[‘error’]->showFlash();**
 
+##Add to log##
++ **$_[‘error’]->log(** $textToLog **);**
+
 #Routing configuration#
 You can add/remove/edit routes in config/routes.yml
 
