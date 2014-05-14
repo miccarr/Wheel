@@ -1,15 +1,17 @@
 Wheel PHP
 =========
 #Global $_ variable#
-+ (str)	**$\_['version']**		  Framework version
-+ (array)	**$\_['config']**		Configuration variables
-+ (array)	**$\_[‘log’]**	      Used for debug only, list of all actions made
-+ (obj)	**$\_[‘controller’]**	Main controller handler
-+ (obj)	**$\_[‘db’]**		      Database handler
-+ (obj)	**$\_[‘database’]**	  Alias for database handler
-+ (obj)	**$\_[‘session’]**		  Easy-access object to session vars
-+ (obj)	**$\_[‘cookie’]**		  Easy-access object to cookies vars
-+ (obj)	**$\_[‘error’]**		    Error-system handler
+| Type | Variable | Info |
+|------|----------|------|
+| (str)	| **$\_['version']**		 | Framework version |
+| (array)	| **$\_['config']**		 | Configuration variables |
+| (array)	| **$\_[‘log’]**	     | Used for debug only, list of all actions made |
+| (obj)	| **$\_[‘controller’]**	 | Main controller handler |
+| (obj)	| **$\_[‘db’]**		       | Database handler |
+| (obj)	| **$\_[‘database’]**	   | Alias for database handler |
+| (obj)	| **$\_[‘session’]**		 | Easy-access object to session vars |
+| (obj)	| **$\_[‘cookie’]**		   | Easy-access object to cookies vars |
+| (obj)	| **$\_[‘error’]**		   | Error-system handler |
 
 From controllers, **$_[xxx]** may be replaced by **$this->xxx**.
 
