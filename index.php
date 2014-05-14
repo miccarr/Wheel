@@ -19,4 +19,6 @@
 	// Loading TWIG
 	include('./lib/Twig/Autoloader.php');
 	Twig_Autoloader::register(true);
+
+	wheel_Router::route( $_SERVER['REQUEST_URI'] );
 ?>

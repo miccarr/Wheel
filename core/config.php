@@ -19,7 +19,7 @@
 			$configSection = substr($configFile, 0, -4);
 			
 			// Parse all files to the $_['config'] variable
-			$_['config'][$configSection] = $Data = Spyc::YAMLLoad('config/'.$configFile);
+			$_['config'][$configSection] = Spyc::YAMLLoad('config/'.$configFile);
 		}
 	}
 ?>

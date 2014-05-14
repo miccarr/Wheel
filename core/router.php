@@ -33,19 +33,58 @@
 			global $_;
 			$output = false;
 			
-			foreach( $_['config']['routes'] as $route){
-				$regex = self::p2regex($route['path']);
-				if(preg_match($regex, $request, $m)){
-					return self::match2ca($route, $m);
-					break;
+			foreach( $_['config']['routes'] as $path){
+				if($path != 'fallback'){
+					$regex = self::p2regex($path);
+					if(preg_match($regex, $request, $m)){
+						return self::match2ca($route, $m);
+						break;
+					}
+					return false;
 				}
-				return false;
 			}
+
+			return $_['config']['routes']['fallback'];
 		}
 		
 		// Route to the good controller / action
 		static public function route($request){
-			
+			global $_;
+
+			$route = req2ca( $request );
+
+			// Get the controller name
+			$controller = empty($route['controller']) ? $_['config']['routes']['fallback']['controller'] : $route['controller'];
+
+			$action = empty($route['controller']) ? $_['config']['routes']['fallback']['action'] : $route['action'];
+
+			$options = $route;	// Transfer the options from the route
+
+			// Try with controllerSuffix (.php , .inc.php and .class.php)
+			if(is_file('./controllers/'.$controller.$_['config']['core']['controllerSuffix'].'.php')){
+				include('./controllers/'.$controller.$_['config']['core']['controllerSuffix'].'.php');
+			}
+			// Try without controllerSuffix
+			elseif(is_file('./controllers/'.$controller.'.php')){
+				include('./controllers/'.$controller.'.php');
+			}
+			// If controller file not foud
+			else{
+				$_['error']->fatal("WHEEL : Controller file '".$controller.".php' not found.");
+			}
+
+
+			// Instency the controller
+			$controller.= $_['config']['core']['controllerSuffix'];
+			$_['controller'] = new $controller;
+
+			// Call action
+			if(method_exists($_['controller'], $action)){
+				$_['controller']->$action($options);
+			}else{
+				$_['controller'] = $_['config']['routes']['fallback']['controller'];
+				$_['controller']->$_['config']['routes']['fallback']['action']($options);
+			}
 		}
 	}
 ?>

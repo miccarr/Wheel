@@ -89,11 +89,12 @@
 		private $_identifier;
 
 		public function __construct(&$model, $array){
-			foreach($array as $varName => $value){			// Put the array result in private property
-				$varName = strtolower($varName);				// All to lowercase to simplify
-				$this->_rawDataArray[$varName] = $value;	
+				$array = array_map('strtolower', $array)		// All to lowercase to be insensitive
+				$this->_rawDataArray[$varName] = $value;		// Put in the private rowDataArray
+
 			}
-			$this->_tableName = $model->tableName();			// Save the table name;
+			$this->_model = $model;								// Save a link to model
+			$this->_tableName = $model->tableName();			// Save the table name
 			$this->_primaryKey = $this->_model->primaryKey();
 			$this->_identifier = $id = $this->_rawDataArray[ $this->_primaryKey ];
 		}
@@ -123,9 +124,12 @@
 			$id = $this->_identifier;
 			$varName = strtolower($varName);			// All to lowercase to simplify
 
-			$value = mysqli_escape_string($value);		// Avoid SQL injections
-
-			$_['db']->sql("UPDATE $table SET `$varName` = '$value' WHERE `$primKey` = $id LIMIT 1");
+			if(is_numeric($value)){
+				$_['db']->sql("UPDATE $table SET `$varName` = $value WHERE `$primKey` = $id LIMIT 1");
+			}else{
+				$value = mysqli_escape_string($value);		// Avoid SQL injections
+				$_['db']->sql("UPDATE $table SET `$varName` = '$value' WHERE `$primKey` = $id LIMIT 1");
+			}
 
 			$this->_rawDataArray[$varName] = $value;
 

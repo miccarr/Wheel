@@ -3,6 +3,9 @@
 #
 #   Routes for URL redirecting
 
+fallback:
+	controller: 'error'
+	action: '404'
 
 '/':
 	controller: 'index'
@@ -19,4 +22,4 @@
 '/{c}/{a}/{id}[/]':
 	controller: '{c}'
 	action: '{a}'
-	options: '{id}'
+	id: '{id}'
