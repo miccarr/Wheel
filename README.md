@@ -18,8 +18,10 @@ Foreign keys must be named like *tableName* _ *fieldName*
 
 ##Connect to the Database (automatic if autoLoad configured)##
 + **$_[‘db’]->connect( [**$databaseConfigName**] );**
+
 ##Execute SQL query directly##
 + **$_[‘db’]->**tableName**->sql( **$sql** );**
+
 ##Select##
 + **$_[‘db’]->**tableName**->select( [**$options**] );**
 >	$options = array(
@@ -36,6 +38,7 @@ Foreign keys must be named like *tableName* _ *fieldName*
 + **$_[‘db’]->**tableName**->selectFirstByField( **$valueOfField** [, **$options** ] );**
 >	$options may contains : ‘fields’, ‘order’
 + **$_[‘db’]->**tableName**( **$id** );**			*// shortcut for ->selectFirstById($id);*
+
 ##Update##
 + **$_[‘db’]->**tableName**->update( **$varName**, **$value** [, **$options** ] );**
 >	$options may contains ‘conditions’, ‘order’, ‘limit’
@@ -45,11 +48,13 @@ Foreign keys must be named like *tableName* _ *fieldName*
 >	$options may contains ‘order’, ‘limit’
 + **$_[‘db’]->**tableName**->updateFirstBy**Field**( **$valueOfField**, **$varName**, **$value** [, **$options** ] );**
 >	$options may contains ‘order’
+
 ##Delete##
 + **$_[‘db’]->**tableName**->delete( [ **$options** ] );**
 >	$options may contains ‘conditions’, ‘order’, ‘limit’ (limit = 1 by default to prevent sh*t to happends)
 + **$_[‘db’]->**tableName**->deleteBy**Field**( **$valueOfField** [, **$options** ] );**
 >	$options may contains ‘order’, ‘limit’ (limit = 1 by default to prevent sh*t to happends)
+
 ##New from array##
 + **$_[‘db’]->**tableName**->new( **$arrayOfValues** );**
 
@@ -58,15 +63,18 @@ The select methods return array containing objects (see below) or return only on
 ##Get the value of field##
 + **echo $**resultObject**->get( **$fieldName** );**
 + **echo $**resultObject**->**field**;**
+
 ##Set the value of field##
 + **$**resultObject**->**field** = **$newValue**;**
 + **$**resultObject**->set( **$fieldName**, **$newValue** );**
+
 ##Delete from the database##
 + **$**resultObject**->delete();**
 
 #Error and logs#
 ##Select a view for errors##
 + **$_[‘error’]->view = ‘**error**’**
+
 ##Log an error##
 Stop all, just show the error.
 + **$_[‘error’]->fatal( **$errDebugDescription** [, **$userMessage** ]);**
@@ -79,6 +87,7 @@ Just a warning.
 
 ##Show the content of a variable##
 + **$_[‘error’]->debug( **$variable** );**
+
 ##Flash errors for user##
 Create new flash error
 + **$_[‘error’]->flash( **$userMessage** [, **$styleClass** ] );**
