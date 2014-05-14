@@ -1,0 +1,22 @@
+#   WHEEL > Config > Core
+#   ---------------------
+#
+#   Routes for URL redirecting
+
+
+'/':
+	controller: 'index'
+	action: 'index'
+
+'/{c}[/]':
+	controller: '{c}'
+	action: 'index'
+
+'/{c}/{a}[/]':
+	controller: '{c}'
+	action: '{a}'
+
+'/{c}/{a}/{id}[/]':
+	controller: '{c}'
+	action: '{a}'
+	options: '{id}'

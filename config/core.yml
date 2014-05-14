@@ -1,0 +1,7 @@
+#   WHEEL > Config > Core
+#   ---------------------
+#
+#   Core config
+
+debug: true
+sessionAutoStart: true

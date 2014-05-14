@@ -1,0 +1,16 @@
+#   WHEEL > Config > Core
+#   ---------------------
+#
+#   Databases configuration
+
+# Name of the default configuration
+defaultConfig: 'default'
+
+# Configurations ------------------
+
+-default
+    host: 'localhost'
+    user: 'root'
+    pass: 'password'
+    dbname: 'database'
+    encoding: utf8
