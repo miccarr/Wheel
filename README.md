@@ -39,7 +39,7 @@ Automatic if autoLoad configured
 
 >	$options may contains : ‘fields’, ‘order’, ‘limit’
 
-+ **$_[‘db’]->** tableName **->selectFirstByField(** $valueOfField **[,** $options **] );**
++ **$_[‘db’]->** tableName **->selectFirstBy** Field **(** $valueOfField **[,** $options **] );**
 
 >	$options may contains : ‘fields’, ‘order’
 
