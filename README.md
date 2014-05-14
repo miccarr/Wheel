@@ -42,11 +42,11 @@ Automatic if autoLoad configured
 + **$_[‘db’]->** tableName **( ** $id **);**			*// shortcut for ->selectFirstById($id);*
 
 ##Update##
-+ **$_[‘db’]->** tableName **->update(** $varName **,** $value **[,** $options **] ); **
++ **$_[‘db’]->** tableName **->update(** $varName **,** $value **[,** $options **] );**
 
 >	$options may contains ‘conditions’, ‘order’, ‘limit’
 
-+ **$_[‘db’]->** tableName **->updateFirst(** $varName **,** $value **[,** $options **] ); **
++ **$_[‘db’]->** tableName **->updateFirst(** $varName **,** $value **[,** $options **] );**
 
 >	$options may contains ‘conditions’, ‘order’
 
@@ -74,7 +74,7 @@ Automatic if autoLoad configured
 The select methods return array containing objects (see below) or return only one object if "selectFirst"
 #Database select result object#
 ##Get the value of field##
-+ **echo $** resultObject **->get(** $fieldName**);**
++ **echo $** resultObject **->get(** $fieldName **);**
 + **echo $** resultObject **->** field **;**
 
 ##Set the value of field##
