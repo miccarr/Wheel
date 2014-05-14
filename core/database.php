@@ -174,3 +174,8 @@
 			}
 		}
 	}
+
+
+	$_['db'] = new wheel_DatabaseConnect();
+	$_['DB'] = &$_['db'];
+	$_['database'] = &$_['db'];
