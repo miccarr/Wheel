@@ -36,10 +36,14 @@ Automatic if autoLoad configured
 >	$options may contains : ‘fields’, ‘conditions’, ‘order’
 
 + **$_[‘db’]->** tableName **->selectBy** Field **(** $valueOfField **[,** $options **] );**
+
 >	$options may contains : ‘fields’, ‘order’, ‘limit’
+
 + **$_[‘db’]->** tableName **->selectFirstByField(** $valueOfField **[,** $options **] );**
+
 >	$options may contains : ‘fields’, ‘order’
-+ **$_[‘db’]->** tableName **( ** $id **);**			*// shortcut for ->selectFirstById($id);*
+
++ **$_[‘db’]->** tableName **(** $id **);**			*// shortcut for ->selectFirstById($id);*
 
 ##Update##
 + **$_[‘db’]->** tableName **->update(** $varName **,** $value **[,** $options **] );**
@@ -107,3 +111,25 @@ Create new flash error
 
 Show all flash recieved since the last showFlash() for the user.
 + **$_[‘error’]->showFlash();**
+
+#Routing configuration#
+You can add/remove/edit routes in config/routes.yml
+
+##The generic path##
+First, you define the generic path. Starting by a / You can use:
++ All alphanum chars
++ \- and \_
++ Slash /
++ variables {myvar}
++ facultative []
+
+##The destination##
+You need to send the root to controller & action.
+
+##SAMPLE##
+
+> '/{c}/{a}/{id}[/]':
+>	controller: '{c}'
+>	action: '{a}'
+>	options: '{id}'
+
