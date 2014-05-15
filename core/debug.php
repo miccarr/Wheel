@@ -10,9 +10,6 @@
 	if($_['config']['core']['debug']){
 		error_reporting(E_ALL);
 		ini_set('display_errors', '1');
-		echo '<!-- INITIAL $_ : ';
-		var_dump($_);
-		echo " -->";
 	}
 	
 	// If the config says DEBUG OFF, or don't say anything :

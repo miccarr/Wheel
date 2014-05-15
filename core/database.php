@@ -7,7 +7,7 @@
 
 	// Main class
 	class wheel_DatabaseConnect {
-		private $handler;
+		private $_handler;
 
 		public function __construct($configName){
 			$this->connect($configName);
@@ -20,43 +20,48 @@
 			if(isset($_['config']['databases'][$configName])){
 				$config = new wheel_DatabaseConfig($_['config']['databases'][$configName]);
 
-				try{
-					$this->handler = new new mysqli($config->host, $config->user, $config->password, $config->dbname);
-				}catch(Exception $e){
-					$_["error"]->error("WHEEL : Unable to connect to the database ('".$configName." : ".$config->user."@".$config->host."').<br />\n".$e);
-				}
+				@$this->_handler = new mysqli($config->host, $config->user, $config->pass, $config->dbname);
 			}else{
 				$_["error"]->error("WHEEL : Tryed to use undefined database configuration ('$configName').");
+			}
+
+			if(!empty($this->_handler->connect_error)){
+				$error = $this->_handler->connect_error;
+				$_["error"]->error("WHEEL : Unable to connect to the database ('".$error."').<br />\n");
+				unset($this->_handler);
+				$this->error = $error;
 			}
 		}
 
 		// Executes the querry
 		public function sql($query){
-			return $this->handler->query($query);
+			global $_;
+			$_["error"]->log("SQL : ".$query);
+
+			$result = $this->_handler->query($query);
+			if($result===false)
+				$_["error"]->fatal("SQL ERROR : ".$this->_handler->error);
+
+			return $result;
 		}
 
 		// Load model or creates a generic model if not exists
 		public function __get($table){
+			global $_;
 			if(class_exists($table)){
 				$this->table = new $table($table);
 			}elseif(is_file('./models/'.$table.'.php')){
 				require_once('./models/'.$table.'.php');
 				$this->table = new $table($table);
-			}elseif($this->handler->query("SELECT 1 FROM '$table' LIMIT 1")){
-				$this->$table = new Models($table);
-				return $this->$table;
 			}else{
-				$_["error"]->error("WHEEL : This table don't exist ('$table').");
+				$this->$table = new Models($table);
 			}
+			return $this->$table;
 		}
 
 		// Shortcut of selectById()
 		public function __call($table, $id){
-			try{
-				return $this->$table->selectById($id);
-			}catch(Exception $e){
-				$_["error"]->error("WHEEL : This table don't exist ('$table').");
-			}
+			return $this->$table->selectById($id);
 		}
 		
 	}
@@ -82,50 +87,54 @@
 	// The generic result class
 	class wheel_DatabaseResult{
 		private $_rawDataArray;
-		private $_externals;
+		private $_externals = array();
 		private $_model;
-		private $_tableName;
-		private $_primaryKey;
 		private $_identifier;
 
 		public function __construct(&$model, $array){
-				$array = array_map('strtolower', $array)		// All to lowercase to be insensitive
-				$this->_rawDataArray[$varName] = $value;		// Put in the private rowDataArray
+			$array = array_map('strtolower', $array);		// All to lowercase to be insensitive
+			$this->_rawDataArray = $array;		// Put in the private rowDataArray
 
-			}
 			$this->_model = $model;								// Save a link to model
-			$this->_tableName = $model->tableName();			// Save the table name
-			$this->_primaryKey = $this->_model->primaryKey();
-			$this->_identifier = $id = $this->_rawDataArray[ $this->_primaryKey ];
+			$this->_identifier = $this->_rawDataArray[ $this->_model->primaryKey() ];
 		}
 
 		// Get any var from the raw data array.
 		public function __get($varName){
 			global $_;
-			if( strcontains($varName, '_') ) {		// If it's an external reference to another table
-				$table, $field = explode('_', $varName, 2);		// Get the tablename and the field
+
+			$varName = strtolower($varName);			// All to lowercase to simplify
+
+			if( strcontains($varName, '_') ) {				// If it's an external reference to another table
+				list($table, $field) = explode('_', $varName, 2);		// Get the tablename and the field
 				if(empty($this->_externals[$table])){
-					$varName = strtolower($varName);			// All to lowercase to simplify
 					$value = $this->_rawDataArray[$varName];
-					$field = "selectBy".$field;
-					$this->_externals[$table] = &$_['db']->$table->$field($value);
+					$field = "selectFirstBy".$field;
+					$this->_externals[$varName] = $_['db']->$table->$field($value);
 				}
-				return &$this->_externals[$table];
+				return $this->_externals[$varName];
+			}
+
+			elseif(is_serialized($this->_rawDataArray[$varName]) AND $unser = unserialize($this->_rawDataArray[$varName])){
+				return $unser;		// Unserialize
 			}else{
-				return &$this->_rawDataArray[$varName];
+				return $this->_rawDataArray[$varName];
 			}
 		}
 
 		public function __set($varName, $value){
 			global $_;
 
-			$table = $this->_tableName;
-			$primKey = $this->_primaryKey;
+			$table = $this->_model->tableName();
+			$primKey = $this->_model->primaryKey();
 			$id = $this->_identifier;
 			$varName = strtolower($varName);			// All to lowercase to simplify
 
 			if(is_numeric($value)){
 				$_['db']->sql("UPDATE $table SET `$varName` = $value WHERE `$primKey` = $id LIMIT 1");
+			}elseif(is_array($value)){
+				$value = serialize($value);
+				$_['db']->sql("UPDATE $table SET `$varName` = '$value' WHERE `$primKey` = $id LIMIT 1");
 			}else{
 				$value = mysqli_escape_string($value);		// Avoid SQL injections
 				$_['db']->sql("UPDATE $table SET `$varName` = '$value' WHERE `$primKey` = $id LIMIT 1");
@@ -134,15 +143,15 @@
 			$this->_rawDataArray[$varName] = $value;
 
 			if( strcontains($varName, '_') ) {		// If it's an external reference to another table
-				$table, $field = explode('_', $varName, 2);
+				list($table, $field) = explode('_', $varName, 2);
 				$this->_externals[$table] = null;
 			}
 		}
 
 		// Delete this save on the database and unset object
 		public function delete(){
-			$table = $this->_tableName;
-			$primKey = $this->_primaryKey;
+			$table = $this->_model->tableName();
+			$primKey = $this->_model->primaryKey();
 			$id = $this->_identifier;
 
 			$_['db']->sql("DELETE FROM $table WHERE `$primKey` = $id LIMIT 1");
@@ -150,8 +159,8 @@
 		}
 
 		// Gives access to the raw data array
-		public function array(){
-			return &$this->_rawDataArray;
+		public function rawData(){
+			return $this->_rawDataArray;
 		}
 
 		// Get any var from the raw data array.

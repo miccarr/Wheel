@@ -9,9 +9,9 @@ defaultConfig: 'default'
 
 # Configurations ------------------
 
--default
+default:
     host: 'localhost'
     user: 'root'
-    pass: 'password'
+    pass: 'root'
     dbname: 'database'
     encoding: utf8

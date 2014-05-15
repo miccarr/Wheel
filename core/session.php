@@ -14,11 +14,15 @@
 		}
 
 		public function start($oid = null){
-			\session_start($oid);
+			if (session_status() == PHP_SESSION_NONE) {
+				session_start($oid);
+			}
 		}
 
 		public function destroy($oid = null){
-			\session_destroy($oid);
+			if (session_status() != PHP_SESSION_NONE) {
+				session_destroy($oid);
+			}
 		}
 
 		public function __get($varName){
@@ -38,6 +42,4 @@
 
 	$_['session'] = new wheel_Session;
 	$_['session']->start();
-	$_['session']->test= "hello world";
-	echo $_['session']->test;
 ?>

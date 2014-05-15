@@ -9,19 +9,16 @@
 		// Desactive the controller if not in DEBUG mode
 		public $debugOnly = false;
 
-		// Access to the global
-		private $_;
-
-		function __construct($_){
-			$this->_ = $_;
-			$this->log->log("WHEEL : Constructing the controller '".get_class($this)."'");
+		function __construct(){
+			$this->error->log("WHEEL : Constructing the controller '".get_class($this)."'");
 		}
 
 		function __get($varName){
-			if(isset($this->_[$varName]))
-				return $this->_[$varName];
+			global $_;
+			if(isset($_[$varName]))
+				return $_[$varName];
 			else
-				$_["error"]->error("WHEEL : Tryed to call inexistant variable (\$this->'$varName').")
+				$this->error->error("WHEEL : Tryed to call inexistant variable (\$this->'$varName').");
 		}
 	}
 ?>

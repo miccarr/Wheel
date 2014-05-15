@@ -25,7 +25,7 @@
 				}
 			}
 
-			return $dest;
+			return $route;
 		}
 		
 		// Translate request to controller / action
@@ -33,7 +33,7 @@
 			global $_;
 			$output = false;
 			
-			foreach( $_['config']['routes'] as $path){
+			foreach( $_['config']['routes'] as $path => $route){
 				if($path != 'fallback'){
 					$regex = self::p2regex($path);
 					if(preg_match($regex, $request, $m)){
@@ -51,7 +51,7 @@
 		static public function route($request){
 			global $_;
 
-			$route = req2ca( $request );
+			$route = self::req2ca( $request );
 
 			// Get the controller name
 			$controller = empty($route['controller']) ? $_['config']['routes']['fallback']['controller'] : $route['controller'];
@@ -73,18 +73,34 @@
 				$_['error']->fatal("WHEEL : Controller file '".$controller.".php' not found.");
 			}
 
+			// Catch output
+			ob_start();
 
-			// Instency the controller
-			$controller.= $_['config']['core']['controllerSuffix'];
-			$_['controller'] = new $controller;
-
-			// Call action
-			if(method_exists($_['controller'], $action)){
-				$_['controller']->$action($options);
+			// Check and load the controller
+			if( class_exists($controller.$_['config']['core']['controllerSuffix']) ){
+				$controller.=$_['config']['core']['controllerSuffix'];
+			}elseif( class_exists($controller.'Ctrl') ){
+				$controller.='Ctrl';
+			}elseif( class_exists($controller.'Controller') ){
+				$controller.='Controller';
+			}elseif( class_exists($controller) ){
+				$_['error']->fatal("WHEEL : Please add the suffix '".$_['config']['core']['controllerSuffix']."' to your controller.");
 			}else{
-				$_['controller'] = $_['config']['routes']['fallback']['controller'];
-				$_['controller']->$_['config']['routes']['fallback']['action']($options);
+				$_['error']->fatal("WHEEL : Controller file loaded, but can't find '".$controller.$_['config']['core']['controllerSuffix']."' class.");
 			}
+
+			$_['controller'] = new $controller();
+
+			if(isset($_['controller'])){
+				// Call action
+				if(method_exists($_['controller'], $action)){
+					$_['controller']->$action($options);
+				}else{
+					$_['controller'] = $_['config']['routes']['fallback']['controller'];
+					$_['controller']->$_['config']['routes']['fallback']['action']($options);
+				}
+			}
+			return ob_get_contents();
 		}
 	}
 ?>
