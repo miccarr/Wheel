@@ -14,14 +14,16 @@
 			$path = str_replace('/', '\/', $path);
 			//$path = preg_replace('#\{([\w\:\w]+)\}#', '(?<$1>[$2-]+)', $path);
 			$path = preg_replace('#\{(\w+)\}#', '(?<$1>[\\w-]+)', $path);
-			return '#^'.$path.'#';
+			return '#^'.$path.'$#';
 		}
 		
 		// Translate match to controller / action
 		static private function match2ca($route, $m){
-			foreach($route as $key => $value){
-				foreach ($m as $k => $v){
-					$route[$key] = str_replace('{'.$k.'}', $v, $value);
+			foreach ($m as $varName => $value){
+				if (!is_numeric($varName)){
+					foreach($route as $key => $val){
+						$route[$key] = str_replace('{'.$varName.'}', $value, $val);
+					}
 				}
 			}
 
@@ -37,10 +39,10 @@
 				if($path != 'fallback'){
 					$regex = self::p2regex($path);
 					if(preg_match($regex, $request, $m)){
+						$_["error"]->log("WHEEL : Find route '".$path."' for this request.");
 						return self::match2ca($route, $m);
 						break;
 					}
-					return false;
 				}
 			}
 
@@ -51,18 +53,29 @@
 		static public function route($request){
 			global $_;
 
+			// Removing GET vars
+			if(strcontains($request, '?'))
+				list($request, $gets) = explode('?', $request, 2);
+
+			// Removing base directories
+			$base = substr($_SERVER['PHP_SELF'],0,-10);
+			$request = substr($request, strlen($base));
+
+			$_["error"]->log("WHEEL : Request route for '".$request."'");
+
 			$route = self::req2ca( $request );
 
 			// Get the controller name
 			$controller = empty($route['controller']) ? $_['config']['routes']['fallback']['controller'] : $route['controller'];
+			$ctrlSuffix = $_['config']['core']['controllerSuffix'];
 
 			$action = empty($route['controller']) ? $_['config']['routes']['fallback']['action'] : $route['action'];
 
 			$options = $route;	// Transfer the options from the route
 
 			// Try with controllerSuffix (.php , .inc.php and .class.php)
-			if(is_file('./controllers/'.$controller.$_['config']['core']['controllerSuffix'].'.php')){
-				include('./controllers/'.$controller.$_['config']['core']['controllerSuffix'].'.php');
+			if(is_file('./controllers/'.$controller.$ctrlSuffix.'.php')){
+				include('./controllers/'.$controller.$ctrlSuffix.'.php');
 			}
 			// Try without controllerSuffix
 			elseif(is_file('./controllers/'.$controller.'.php')){
@@ -70,7 +83,15 @@
 			}
 			// If controller file not foud
 			else{
-				$_['error']->fatal("WHEEL : Controller file '".$controller.".php' not found.");
+				$_['error']->error("WHEEL : Controller file '".$controller."(".$ctrlSuffix.").php' not found.");
+				$controller = $_['config']['routes']['fallback']['controller'];
+				if(is_file('./controllers/'.$controller.'.php')){
+					include('./controllers/'.$controller.'.php');
+				}elseif(is_file('./controllers/'.$controller.$ctrlSuffix.'.php')){
+					include('./controllers/'.$controller.$ctrlSuffix.'.php');
+				}else{
+					$_['error']->fatal("WHEEL : Controller file and fallback '".$controller."(".$ctrlSuffix.").php' not found.");
+				}
 			}
 
 			// Catch output

@@ -18,7 +18,6 @@
 	include('./core/session.php');
 	
 
-
 	$_['output'] = wheel_Router::route( $_SERVER['REQUEST_URI'] );
 	ob_end_clean();
 

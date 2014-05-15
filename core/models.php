@@ -125,7 +125,8 @@
 
 		public function selectFirst( $options=array() ){
 			$options = array_merge($options, array('limit' => 1));
-			$result = $this->select($options)[0];
+			$result = $this->select($options);
+			$result = reset($result);	// Return first element
 			return $result;
 		}
 
