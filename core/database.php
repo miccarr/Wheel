@@ -59,9 +59,9 @@
 			return $this->$table;
 		}
 
-		// Shortcut of selectById()
+		// Shortcut of selectFirstById()
 		public function __call($table, $id){
-			return $this->$table->selectById($id);
+			return $this->$table->selectFirstById($id[0]);
 		}
 		
 	}

@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+   RewriteEngine on
+   RewriteRule    (.*) index.php    [L]
+   RewriteCond .web/%{REQUEST_FILENAME} -f
+   RewriteRule    (.*) web/$1 [L]
+</IfModule>

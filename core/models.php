@@ -17,6 +17,9 @@
 
 		private function _makeResult($rawResult){
 			global $_;
+
+			$output = array();
+
 			while( $row = $rawResult->fetch_array() ){
 				if(empty($row->id))
 					$output[] = $row;
@@ -51,14 +54,13 @@
 		// The famous select function, with options : conditions, fields, order, list
 		public function select( $options=array() ){
 			global $_;
-
 			// Format the conditions option
 			if(is_array($options['conditions'])){
 				foreach($options['conditions'] as $key => $value){
 					if( is_numeric($key) )					// If complete string sql condition
 						$conditions[] = $value;
 					else{									// If associative condition
-						if(!is_numeric($value))						// If not int value, quote
+						if(!is_numeric($value))
 							$value = "'".$value."'";
 						if(strcontains($key, '`'))	
 							$conditions[] = $key." = ".$value;
@@ -123,7 +125,8 @@
 
 		public function selectFirst( $options=array() ){
 			$options = array_merge($options, array('limit' => 1));
-			return $this->select($options)[0];
+			$result = $this->select($options)[0];
+			return $result;
 		}
 
 
@@ -132,14 +135,14 @@
 			// SelectByField()
 			if(startWith($methodName, 'selectBy')){
 				$options = isset($args[1]) ? $args[1] : array();
-				$options = array_merge($options, array('conditions'=> array( substr($methodName, 8) => $args[0])));
+				$options = array_merge($options, array('conditions' => array( substr($methodName, 8) => $args[0])));
 				return $this->select($options);
 			}
 
 			// SelectFirstByField()
 			elseif(startWith($methodName, 'selectFirstBy')){
 				$options = isset($args[1]) ? $args[1] : array();
-				$options = array_merge($options, array('conditions'=> array( substr($methodName, 13) => $args[0])));
+				$options = array_merge($options, array('conditions' => array( substr($methodName, 13) => $args[0])));
 				return $this->selectFirst($options);
 			}
 		}
