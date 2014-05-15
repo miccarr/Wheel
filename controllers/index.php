@@ -1,7 +1,8 @@
 <?php
 	/*
-	//	Example controller for WHEEL
+	//	index.php : Example controller for WHEEL
 	*/
+	
 	class indexController extends Controllers{
 
 		public function index(){
