@@ -136,8 +136,9 @@ You need to send the root to controller & action.
 
 ##SAMPLE##
 
-> '/{c}/{a}/{id}[/]':
->	controller: '{c}'
->	action: '{a}'
->	options: '{id}'
-
+```yaml
+'/{c}/{a}/{id}[/]...':
+	 controller: '{c}'
+	 action: '{a}'
+	 options: '{id}'
+```
