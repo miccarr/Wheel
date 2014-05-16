@@ -18,7 +18,7 @@
 			if(isset($_[$varName]))
 				return $_[$varName];
 			else
-				$this->error->error("WHEEL : Tryed to call inexistant variable (\$this->'$varName').");
+				$this->error->error("WHEEL : Tryed to call inexistant property (\$this->'$varName').");
 		}
 	}
 ?>

@@ -15,13 +15,13 @@
 		}
 
 		public function img( $url, $alt = '' ){
-			return '<img src="'.$url.'" alt="'.e($alt).'" />';
+			return '<img src="'.$url.'" alt="'.$alt.'" />';
 		}
 
 		public function link($url, $text = null, $title = ''){
-			$out = '<a href="'.$this->url($url).'" title="'.e($title).'">';
+			$out = '<a href="'.$this->url($url).'" title="'.$title.'">';
 			if(!empty($text))
-				$out.= e($text).'</a>';
+				$out.= $text.'</a>';
 			return $out;
 		}
 

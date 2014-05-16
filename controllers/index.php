@@ -24,7 +24,7 @@
 			}else
 				echo "<h1>There is not photo with the id '".$options['id']."' !<h1>";
 
-			echo '<hr />'.$this->helper->link('/', '<- Back', 'Return to the list');
+			echo '<hr />'.$this->helper->link('/', e('<- Back'), 'Return to the list');
 		}
 
 	}
