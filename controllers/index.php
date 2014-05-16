@@ -6,7 +6,7 @@
 	class indexController extends Controllers{
 
 		public function index(){
-			echo "<b>Hello World !</b>";
+			echo "<h1>Hello World !</h1>";
 			foreach($this->database->Photos->selectByVisibility(true) as $photo){
 				echo "<li>";
 				echo $this->helper->link(
@@ -27,5 +27,4 @@
 
 			echo '<hr />'.$this->helper->link('/', e('<- Back'), 'Return to the list');
 		}
-
 	}

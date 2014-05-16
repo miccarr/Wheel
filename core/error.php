@@ -13,15 +13,18 @@
 			global $_;
 			$this->_errors[] = array('type'=>$type, 'msg'=>$msg[0]);
 			if($type=='fatal'){
-				if(!$_['config']['core']['debug']){
+				if($_['config']['core']['debug']){
 					echo "<h1>Fatal Error</h1><h2>".$msg[0]."</h2>";
 					$this->showErrors();
 					die('Fatal error');
 				}
-				header('Location: '.$_['helper']->url(array_merge(
-						$_['config']['routes']['fallback']['controller'],
-						array('error' => $msg[1])
-					)));
+				if(!empty($msg[1]))
+					header('Location: '.$_['helper']->url(array_merge(
+							$_['config']['routes']['fallback']['controller'],
+							array('error' => $msg[1])
+						)));
+				else
+					header('Location: '.$_['helper']->url($_['config']['routes']['fallback']['controller']));
 			}
 		}
 		public function showErrors(){

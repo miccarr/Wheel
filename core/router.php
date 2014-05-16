@@ -128,7 +128,8 @@
 					$_['controller']->$action($options);
 				}else{
 					$_['controller'] = $_['config']['routes']['fallback']['controller'];
-					$_['controller']->$_['config']['routes']['fallback']['action']($options);
+					if(method_exists($_['controller'], $_['config']['routes']['fallback']['action']))
+						$_['controller']->$_['config']['routes']['fallback']['action']($options);
 				}
 			}
 			return ob_get_contents();

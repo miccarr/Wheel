@@ -19,6 +19,9 @@
 		private function _makeResult($rawResult){
 			global $_;
 
+			if(!is_object($rawResult))
+				$_["error"]->fatal("Fatal error : can't make object without raw result array");
+
 			$output = array();
 
 			while( $row = $rawResult->fetch_array() ){
@@ -65,8 +68,11 @@
 		// The famous select function, with options : conditions, fields, order, list
 		public function select( $options=array() ){
 			global $_;
+
 			// Format the conditions option
-			if(is_array($options['conditions'])){
+			if(empty($options['conditions'])){
+				$conditions = '';
+			}elseif(is_array($options['conditions'])){
 				foreach($options['conditions'] as $key => $value){
 					if( is_numeric($key) )					// If complete string sql condition
 						$conditions[] = $value;
@@ -112,7 +118,7 @@
 				}
 				$orders = implode(', ', $orders);
 			}else{
-				$orders = isset($options['order']) ? $options['order'] : null;
+				$orders = isset($options['order']) ? "`".$options['order']."`" : null;
 			}
 
 			$table = $this->_tableName;

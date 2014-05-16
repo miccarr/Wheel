@@ -28,9 +28,9 @@
 
 			if(!empty($this->_handler->connect_error)){
 				$error = $this->_handler->connect_error;
-				$_["error"]->error("WHEEL : Unable to connect to the database ('$error').<br />\n");
 				unset($this->_handler);
 				$this->error = $error;
+				$_["error"]->fatal("WHEEL : Unable to connect to the database ($error).<br />\n");
 			}elseif(!empty($config->encoding)){
 				$this->_handler->set_charset($config->encoding);
 				$_["error"]->log("WHEEL : Connected to the database ('$configName').<br />\n");
