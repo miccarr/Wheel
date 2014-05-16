@@ -38,5 +38,8 @@
 	    }
 	    return false;
 	}
+	function e($text){
+		return htmlspecialchars($text);
+	}
 
 ?>

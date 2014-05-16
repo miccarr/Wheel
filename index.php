@@ -16,6 +16,7 @@
 	include('./core/models.php');
 	include('./core/controllers.php');
 	include('./core/session.php');
+	include('./core/helper.php');
 	
 
 	$_['output'] = wheel_Router::route( $_SERVER['REQUEST_URI'] );

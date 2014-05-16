@@ -8,9 +8,12 @@
 		public function index(){
 			echo "<b>Hello World !</b>";
 			foreach($this->database->Photos->selectByVisibility(true) as $photo){
-				echo '<li><a href="index/show/'.$photo->id.'">';
-				echo $photo->name." <i>(in ".$photo->albums_id->name.")</i>";
-				echo "</a></li>";
+				echo "<li>";
+				echo $this->helper->link(
+						'/index/show/'.$photo->id,
+						$photo->name." <i>(in ".$photo->albums_id->name.")</i>", 'Image n° '.$photo->id
+					);
+				echo "</li>";
 			}
 		}
 
@@ -21,7 +24,7 @@
 			}else
 				echo "<h1>There is not photo with the id '".$options['id']."' !<h1>";
 
-			echo '<hr /><a href="../..">Back</a>';
+			echo '<hr />'.$this->helper->link('/', '<- Back', 'Return to the list');
 		}
 
 	}
