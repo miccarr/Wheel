@@ -14,6 +14,16 @@
 			$path = str_replace('/', '\/', $path);
 			//$path = preg_replace('#\{([\w\:\w]+)\}#', '(?<$1>[$2-]+)', $path);
 			$path = preg_replace('#\{(\w+)\}#', '(?<$1>[\\w-]+)', $path);
+			
+			// If end with ... , can have params after
+			if ( endWith($path, '...') ){
+				return '#^'. substr($path, 0, -3) .'#';
+			}elseif ( endWith($path, '(...)?') ){
+				return '#^'. substr($path, 0, -6) .'#';
+			}elseif ( endWith($path, '...)?') ){
+				return '#^'. substr($path, 0, -5) .')?#';
+			}
+				
 			return '#^'.$path.'$#';
 		}
 		

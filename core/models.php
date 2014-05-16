@@ -8,6 +8,7 @@
 	class Models{
 		private $_tableName;
 		private $_primaryKey;
+		private $_cache;
 
 		public function __construct($tableName = null){
 			if(empty($this->_tableName)){
@@ -37,6 +38,16 @@
 				$rows[$key] = new wheel_DatabaseResult($this, $data);
 			}
 			return $rows;
+		}
+
+		private function _cache($sqlQuery){
+			global $_;
+
+			// If not in the cache, makeResult from sqlQuery
+			if(!isset($this->_cache[$sqlQuery]))
+				$this->_cache[$sqlQuery] = $this->_makeResult( $_['db']->sql($sqlQuery) );
+
+			return $this->_cache[$sqlQuery];
 		}
 
 		public function primaryKey(){
@@ -120,7 +131,7 @@
 				$SQL.= $options['limit'];
 			}
 
-			return $this->_makeResult( $_['db']->sql($SQL) );
+			return $this->_cache($SQL);
 		}
 
 		public function selectFirst( $options=array() ){

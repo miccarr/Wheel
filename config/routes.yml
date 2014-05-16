@@ -3,9 +3,12 @@
 #
 #   Routes for URL redirecting
 
+# The fallback route, if no one match with the request
 fallback:
 	controller: 'error'
 	action: '404'
+
+# All the routes ----------
 
 '/':
 	controller: 'index'
@@ -19,7 +22,7 @@ fallback:
 	controller: '{c}'
 	action: '{a}'
 
-'/{c}/{a}/{id}[/]':
+'/{c}/{a}/{id}[/...]':
 	controller: '{c}'
 	action: '{a}'
 	id: '{id}'

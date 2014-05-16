@@ -6,12 +6,12 @@ Wheel PHP
 | (str)	| **$\_['version']**		 | Framework version |
 | (array)	| **$\_['config']**		 | Configuration variables |
 | (array)	| **$\_[‘log’]**	     | Used for debug only, list of all actions made |
-| (obj)	| **$\_[‘controller’]**	 | Main controller handler |
-| (obj)	| **$\_[‘db’]**		       | Database handler |
-| (obj)	| **$\_[‘database’]**	   | Alias for database handler |
-| (obj)	| **$\_[‘session’]**		 | Easy-access object to session vars |
-| (obj)	| **$\_[‘cookie’]**		   | Easy-access object to cookies vars |
-| (obj)	| **$\_[‘error’]**		   | Error-system handler |
+| (obj)	| **$_[‘controller’]**	 | Main controller handler |
+| (obj)	| **$_[‘db’]**		       | Database handler |
+| (obj)	| **$_[‘database’]**	   | Alias for database handler |
+| (obj)	| **$_[‘session’]**		 | Easy-access object to session vars |
+| (obj)	| **$_[‘cookie’]**		   | Easy-access object to cookies vars |
+| (obj)	| **$_[‘error’]**		   | Error-system handler |
 
 From controllers, **$_[xxx]** may be replaced by **$this->xxx**.
 
@@ -23,10 +23,10 @@ Foreign keys must be named like *tableName* \_ *fieldName*
 
 Automatic if autoLoad configured
 
-+ **$\_[‘db’]->connect([** $databaseConfigName **] );**
++ **$_[‘db’]->connect([** $databaseConfigName **] );**
 
 ##Execute SQL query directly##
-+ **$\_[‘db’]->** tableName **->sql(** $sql **);**
++ **$_[‘db’]->** tableName **->sql(** $sql **);**
 
 ##Select##
 + **$_[‘db’]->** tableName **->select( [** $options **] );**
@@ -107,6 +107,9 @@ Just a warning.
 ##Show the content of a variable##
 + **$_[‘error’]->debug(** $variable **);**
 
+##Show the errors and log##
++ **$_[‘error’]->showErrors();**
+
 ##Flash errors for user##
 Create new flash error
 + **$_[‘error’]->flash(** $userMessage **[,** $styleClass **] );**
@@ -122,11 +125,11 @@ You can add/remove/edit routes in config/routes.yml
 
 ##The generic path##
 First, you define the generic path. Starting by a / You can use:
-+ All alphanum chars
-+ \- and \_
-+ Slash /
++ All alphanum and \_ \- chars
++ Slash / to separate
 + variables {myvar}
 + facultative []
++ end with ... to say 'may include some craps after'
 
 ##The destination##
 You need to send the root to controller & action.

@@ -8,6 +8,7 @@
 	// Main class
 	class wheel_DatabaseConnect {
 		private $_handler;
+		public $cache;
 
 		public function __construct($configName){
 			$this->connect($configName);
@@ -27,7 +28,7 @@
 
 			if(!empty($this->_handler->connect_error)){
 				$error = $this->_handler->connect_error;
-				$_["error"]->error("WHEEL : Unable to connect to the database ('".$error."').<br />\n");
+				$_["error"]->error("WHEEL : Unable to connect to the database ('$error').<br />\n");
 				unset($this->_handler);
 				$this->error = $error;
 			}
@@ -36,7 +37,8 @@
 		// Executes the querry
 		public function sql($query){
 			global $_;
-			$_["error"]->log("SQL : ".$query);
+
+			$_["error"]->log("SQL Querry : ".$query);
 
 			$result = $this->_handler->query($query);
 			if($result===false)
@@ -112,14 +114,21 @@
 					$field = "selectFirstBy".$field;
 					$this->_externals[$varName] = $_['db']->$table->$field($value);
 				}
-				return $this->_externals[$varName];
+				if(!empty($this->_externals[$varName]))
+					return $this->_externals[$varName];
 			}
 
-			elseif(is_serialized($this->_rawDataArray[$varName]) AND $unser = unserialize($this->_rawDataArray[$varName])){
-				return $unser;		// Unserialize
-			}else{
-				return $this->_rawDataArray[$varName];
+			if(isset($this->_rawDataArray[$varName])){
+				if(is_serialized($this->_rawDataArray[$varName]) AND $unser = unserialize($this->_rawDataArray[$varName])){
+					return $unser;		// Unserialize
+				}else{
+					return $this->_rawDataArray[$varName];
+				}
 			}
+
+			// If nothing returned
+			$_["error"]->error("WHEEL : Field '$varName' not found.");
+			return false;
 		}
 
 		public function __set($varName, $value){
