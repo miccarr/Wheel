@@ -204,6 +204,11 @@
 				return $this->set( $varName, $arg[0]);
 			}
 		}
+
+		public function __toString(){
+			$primKey = $this->_model->primaryKey();
+			return $this->$primKey;
+		}
 	}
 
 

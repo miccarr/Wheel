@@ -20,7 +20,8 @@
 		public function show($options){
 			if($photo = $this->database->Photos($options['id'])){
 				echo "<h1><u>Name :</u> ".$photo->name.'</h1>';
-				echo "<u>Album :</u> ".$photo->albums_id->name;
+				echo "<u>Album N# ".$photo->albums_id." :</u> ".$photo->albums_id->name;
+				echo "<hr />".$this->helper->img($photo->url);
 			}else
 				echo "<h1>There is not photo with the id '".$options['id']."' !<h1>";
 
