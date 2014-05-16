@@ -19,16 +19,23 @@
 		public function showErrors(){
 			global $_;
 			if(isset($_GET['debug']))
-				echo '<table id="errors" style="opacity:.5;"><tr><th colspan="2">Debug</th></tr>';
+				echo '<table id="wheel_errors" style="opacity:.5;"><tr><th colspan="2">Debug</th></tr>';
 			else
-				echo '<table id="errors" style="display: none;"><tr><th colspan="2">Debug</th></tr>';
+				echo '<table id="wheel_errors" style="display: none;"><tr><th colspan="2">Debug</th></tr>';
 			foreach ($this->_errors as $e) {
 				echo "<tr><td><b>".$e['type']."</b></td><td>";
 				echo $e['msg']."</td></tr>";
 			}
-			echo '<tr><td colspan="2"><pre>';
-			var_dump($_);
-			echo '</pre>';
+			echo '<tr><td colspan="2">';
+
+			foreach($_ as $key => $content){
+				if(($key != 'error' AND $key != 'db') OR $_GET['debug']=='true'){
+					echo "<h2>$key</h2><pre>";
+					var_dump($_[$key]);
+					echo "</pre>";
+				}
+			}
+
 			echo '</td></tr></table>';
 		}
 	}

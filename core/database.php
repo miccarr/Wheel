@@ -207,7 +207,6 @@
 	// Load default config
 	if(!empty($_['config']['databases']['defaultConfig'])){
 		$_['db'] = new wheel_DatabaseConnect($_['config']['databases']['defaultConfig']);
-		$_['DB'] = &$_['db'];
 		$_['database'] = &$_['db'];
 	}else{
 		$_["error"]->info("WHEEL : No default database config, no autoLoad .");
