@@ -5,7 +5,6 @@ Wheel PHP
 |------|----------|------|
 | (str)	| **$\_['version']**		 | Framework version |
 | (array)	| **$\_['config']**		 | Configuration variables |
-| (array)	| **$\_[‘log’]**	     | Used for debug only, list of all actions made |
 | (obj)	| **$_[‘controller’]**	 | Main controller handler |
 | (obj)	| **$_[‘db’]**		       | Database handler |
 | (obj)	| **$_[‘database’]**	   | Alias for database handler |
@@ -14,6 +13,26 @@ Wheel PHP
 | (obj)	| **$_[‘error’]**		   | Error-system handler |
 
 From controllers, **$_[xxx]** may be replaced by **$this->xxx**.
+
+#Files and directories#
+| x | Path | Info |
+|---|------|------|
+|.  | /    | The root |
+|.. | /config | Contains all YAML configuration files |
+|...| /config/core.yml | Some core configs |
+|...| /config/databases.yml | Contains the configuration about the way your site connect to the DB |
+|...| /config/render.yml | Render configuration file |
+|...| /config/routes.yml | List of all the routes, and their targets |
+|.. | /controllers | The directory where you put your cute controllers |
+|.. | /core/* | All the magic comes deeply from this directory |
+|.. | /lib/* | Some other codes WheelPHP uses |
+|.. | /models | The directory where you can put your handmade models (facultative) |
+|.. | /views | Heres come all the views |
+|...| /views/cache | Caches for compilated templates and stylesheets |
+|...| /views/layouts | You can put your main layouts there |
+|...| /views/styles | You can put yours SCSS here to be auto-compiled |
+|...| /views/\*Controller | Views about the controller \* |
+|.. | /web | Put all your files, images, etc... there |
 
 #Database access methods#
 
@@ -90,9 +109,12 @@ The select methods return array containing objects (see below) or return only on
 ##Delete from the database##
 + **$** resultObject **->delete();**
 
+##Get array with all fields##
++ **$** resultObject **->rawData();**
+
 #Error and logs#
 ##Select a view for errors##
-+ **$_[‘error’]->view = ‘** error **’**
++ **$_[‘error’]->view = ‘** error **’;**
 
 ##Log an error##
 Stop all, just show the error.
@@ -142,3 +164,7 @@ You need to send the root to controller & action.
 	 action: '{a}'
 	 options: '{id}'
 ```
+
+##Special cases (Stylesheets)##
+All the .css files are redirected to SCSS compiler / cache
+
