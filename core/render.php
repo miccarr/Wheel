@@ -22,7 +22,7 @@
 	// Add the helpers
 	$_['mustache']->addHelper('WHEELURL', function($text ='', $mustache = null) {
 		if (isset($_GET['debug'])){
-			if(strcontains($text, '?') AND )
+			if(strcontains($text, '?'))
 				$debug = '&debug';
 			else
 				$debug = '?debug';
