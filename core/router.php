@@ -9,22 +9,30 @@
 		
 		// Transform the path definition to regular expression
 		static private function p2regex($path){
+
+			$start = '#';
+			// If not start with / may have params before
+			if(startWith($path,'/'))
+				$start.= '^';
+			elseif(startWith($path,'#'))
+				return $path;
+
 			$path = str_replace('[', '(', $path);
 			$path = str_replace(']', ')?', $path);
 			$path = str_replace('/', '\/', $path);
 			//$path = preg_replace('#\{([\w\:\w]+)\}#', '(?<$1>[$2-]+)', $path);
 			$path = preg_replace('#\{(\w+)\}#', '(?<$1>[\\w-]+)', $path);
-			
+
 			// If end with ... , can have params after
 			if ( endWith($path, '...') ){
-				return '#^'. substr($path, 0, -3) .'#';
+				return $start. substr($path, 0, -3) .'#';
 			}elseif ( endWith($path, '(...)?') ){
-				return '#^'. substr($path, 0, -6) .'#';
+				return $start. substr($path, 0, -6) .'#';
 			}elseif ( endWith($path, '...)?') ){
-				return '#^'. substr($path, 0, -5) .')?#';
+				return $start. substr($path, 0, -5) .')?#';
 			}
 				
-			return '#^'.$path.'$#';
+			return $start.$path.'$#';
 		}
 		
 		// Translate match to controller / action
@@ -43,15 +51,13 @@
 		// Translate request to controller / action
 		static private function req2ca($request){
 			global $_;
-			$output = false;
 			
 			foreach( $_['config']['routes'] as $path => $route){
 				if($path != 'fallback'){
 					$regex = self::p2regex($path);
 					if(preg_match($regex, $request, $m)){
-						$_["error"]->log("WHEEL : Find route '".$path."' for this request.");
+						$_["error"]->log("WHEEL : Find route '".$path."' ('".$regex."') for this request.");
 						return self::match2ca($route, $m);
-						break;
 					}
 				}
 			}
@@ -99,49 +105,61 @@
 
 			$_["error"]->log("WHEEL : Request route for '".$request."'");
 
-			$route = self::req2ca( $request );
-
-			// Get the controller name
-			$controller = empty($route['controller']) ? $_['config']['routes']['fallback']['controller'] : $route['controller'];
-			
-
-			$action = empty($route['controller']) ? $_['config']['routes']['fallback']['action'] : $route['action'];
-
-			$options = $route;	// Transfer the options from the route
-
-			self::includeController($controller);
-
 			// Catch output
 			ob_start();
 
-			// Check and load the controller
-			if( class_exists($controller.$_['config']['core']['controllerSuffix']) ){
-				$controller.=$_['config']['core']['controllerSuffix'];
-			}elseif( class_exists($controller.'Ctrl') ){
-				$controller.='Ctrl';
-			}elseif( class_exists($controller.'Controller') ){
-				$controller.='Controller';
-			}elseif( class_exists($controller) ){
-				$_['error']->fatal("WHEEL : Please add the suffix '".$_['config']['core']['controllerSuffix']."' to your controller.");
+			$route = self::req2ca( $request );
+
+			if(!empty($route['sass'])){
+				self::sass($route['sass']);
 			}else{
-				$_['error']->fatal("WHEEL : Controller file loaded, but can't find '".$controller.$_['config']['core']['controllerSuffix']."' class.");
-			}
 
-			$_['controller'] = new $controller($action);
+				// Get the controller name
+				$controller = empty($route['controller']) ? $_['config']['routes']['fallback']['controller'] : $route['controller'];
+				
 
-			if(isset($_['controller'])){
-				// Call action
-				if(method_exists($_['controller'], $action)){
-					$_['controller']->$action($options);
-				}elseif(method_exists($_['controller'], '__call')){
-					$_['controller']->$action($options);
+				$action = empty($route['controller']) ? $_['config']['routes']['fallback']['action'] : $route['action'];
+
+				$options = $route;	// Transfer the options from the route
+
+				self::includeController($controller);
+
+				// Check and load the controller
+				if( class_exists($controller.$_['config']['core']['controllerSuffix']) ){
+					$controller.=$_['config']['core']['controllerSuffix'];
+				}elseif( class_exists($controller.'Ctrl') ){
+					$controller.='Ctrl';
+				}elseif( class_exists($controller.'Controller') ){
+					$controller.='Controller';
+				}elseif( class_exists($controller) ){
+					$_['error']->fatal("WHEEL : Please add the suffix '".$_['config']['core']['controllerSuffix']."' to your controller.");
 				}else{
-					$_['controller'] = $_['config']['routes']['fallback']['controller'];
-					if(method_exists($_['controller'], $_['config']['routes']['fallback']['action']))
-						$_['controller']->$_['config']['routes']['fallback']['action']($options);
+					$_['error']->fatal("WHEEL : Controller file loaded, but can't find '".$controller.$_['config']['core']['controllerSuffix']."' class.");
+				}
+
+				$_['controller'] = new $controller($action);
+
+				if(isset($_['controller'])){
+					// Call action
+					if(method_exists($_['controller'], $action)){
+						$_['controller']->$action($options);
+					}elseif(method_exists($_['controller'], '__call')){
+						$_['controller']->$action($options);
+					}else{
+						$_['controller'] = $_['config']['routes']['fallback']['controller'];
+						if(method_exists($_['controller'], $_['config']['routes']['fallback']['action']))
+							$_['controller']->$_['config']['routes']['fallback']['action']($options);
+					}
 				}
 			}
+
 			return ob_get_contents();
+		}
+
+		static private function sass($file){
+			include('./lib/scss.php');
+			$sass = new scss_server('./views/styles/', './views/cache/');
+			$sass->serve('', './views/styles/'.$file);
 		}
 	}
 ?>

@@ -4321,8 +4321,12 @@ class scss_server {
 	 *
 	 * @param string $salt Prefix a string to the filename for creating the cache name hash
 	 */
-	public function serve($salt = '') {
-		if ($input = $this->findInput()) {
+	public function serve($salt = '', $input = null) {
+		
+		if(empty($input))
+			$input = $this->findInput();
+
+		if (is_file($input)) {
 			$output = $this->cacheName($salt . $input);
 			header('Content-type: text/css');
 
@@ -4337,14 +4341,12 @@ class scss_server {
 				header('X-SCSS-Cache: true');
 				echo file_get_contents($output);
 			}
-
-			return;
+		}else{
+			header('HTTP/1.0 404 Not Found');
+			header('Content-type: text');
+			$v = scssc::$VERSION;
+			echo "/* INPUT '$input' NOT FOUND scss $v */\n";
 		}
-
-		header('HTTP/1.0 404 Not Found');
-		header('Content-type: text');
-		$v = scssc::$VERSION;
-		echo "/* INPUT NOT FOUND scss $v */\n";
 	}
 
 	/**

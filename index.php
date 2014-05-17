@@ -29,6 +29,8 @@
 
 	if(!empty($_['controller']->render))
 		echo $_['controller']->render;
-	else
+	elseif(isset($_['controller']))
 		echo $_['controller']->min($_['stdOut']);
+	else
+		echo $_['stdOut'];
 ?>

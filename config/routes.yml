@@ -8,6 +8,10 @@ fallback:
 	controller: 'error'
 	action: '404'
 
+# Path to the SASS compiler / css cache
+'{filename}.css':
+	sass: '{filename}.scss'
+
 # All the routes ----------
 
 '/':

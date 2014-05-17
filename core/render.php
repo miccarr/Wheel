@@ -19,7 +19,7 @@
 	$_['mustache'] = new Mustache_Engine($_['mustache']);
 
 
-	// Add the helper
+	// Add the helpers
 	$_['mustache']->addHelper('WHEELBASE', function($text ='', $mustache = null) {
 		if(startWith($text,'/'))
 			return substr($_SERVER['PHP_SELF'],0,-10).$text;

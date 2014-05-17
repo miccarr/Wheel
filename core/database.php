@@ -43,7 +43,7 @@
 					$_["error"]->fatal("WHEEL : Unable to connect to the database ($error).");
 				}elseif(!empty($config->encoding)){
 					$this->_handler->set_charset($config->encoding);
-					$_["error"]->log("WHEEL : Connected to the database ('$configName').");
+					$_["error"]->log("WHEEL : Connected to the database ('$this->configName').");
 				}
 			}
 		}
