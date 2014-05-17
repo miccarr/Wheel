@@ -58,30 +58,10 @@
 
 			return $_['config']['routes']['fallback'];
 		}
-		
-		// Route to the good controller / action
-		static public function route($request){
+
+		static private function includeController($controller){
 			global $_;
-
-			// Removing GET vars
-			if(strcontains($request, '?'))
-				list($request, $gets) = explode('?', $request, 2);
-
-			// Removing base directories
-			$base = substr($_SERVER['PHP_SELF'],0,-10);
-			$request = substr($request, strlen($base));
-
-			$_["error"]->log("WHEEL : Request route for '".$request."'");
-
-			$route = self::req2ca( $request );
-
-			// Get the controller name
-			$controller = empty($route['controller']) ? $_['config']['routes']['fallback']['controller'] : $route['controller'];
 			$ctrlSuffix = $_['config']['core']['controllerSuffix'];
-
-			$action = empty($route['controller']) ? $_['config']['routes']['fallback']['action'] : $route['action'];
-
-			$options = $route;	// Transfer the options from the route
 
 			// Try with controllerSuffix (.php , .inc.php and .class.php)
 			if(is_file('./controllers/'.$controller.$ctrlSuffix.'.php')){
@@ -103,6 +83,33 @@
 					$_['error']->fatal("WHEEL : Controller file and fallback '".$controller."(".$ctrlSuffix.").php' not found.");
 				}
 			}
+		}
+		
+		// Route to the good controller / action
+		static public function route($request){
+			global $_;
+
+			// Removing GET vars
+			if(strcontains($request, '?'))
+				list($request, $gets) = explode('?', $request, 2);
+
+			// Removing base directories
+			$base = substr($_SERVER['PHP_SELF'],0,-10);
+			$request = substr($request, strlen($base));
+
+			$_["error"]->log("WHEEL : Request route for '".$request."'");
+
+			$route = self::req2ca( $request );
+
+			// Get the controller name
+			$controller = empty($route['controller']) ? $_['config']['routes']['fallback']['controller'] : $route['controller'];
+			
+
+			$action = empty($route['controller']) ? $_['config']['routes']['fallback']['action'] : $route['action'];
+
+			$options = $route;	// Transfer the options from the route
+
+			self::includeController($controller);
 
 			// Catch output
 			ob_start();
@@ -120,7 +127,7 @@
 				$_['error']->fatal("WHEEL : Controller file loaded, but can't find '".$controller.$_['config']['core']['controllerSuffix']."' class.");
 			}
 
-			$_['controller'] = new $controller();
+			$_['controller'] = new $controller($action);
 
 			if(isset($_['controller'])){
 				// Call action

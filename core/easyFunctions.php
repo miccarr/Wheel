@@ -41,5 +41,13 @@
 	function e($text){
 		return htmlspecialchars($text);
 	}
-
+	function rawData($input){
+		if(is_array($input))
+			return array_map('rawData', $input);
+		elseif(is_a($input, 'wheel_DatabaseResult')){
+			$input = $input->rawData();
+		}
+		
+		return $input;
+	}
 ?>

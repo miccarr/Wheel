@@ -1,0 +1,12 @@
+{{#photo}}
+	<h1>
+		<u>Name :</u>
+		{{name}}
+	</h1>
+	<img src="{{url}}" alt="{{name}}"/>
+{{/photo}}
+{{^photo}}
+	<h1>There is no photo with the ID '{{id}}'</h1>
+{{/photo}}
+<hr />
+<a href="/WHEEL/">Back</a>

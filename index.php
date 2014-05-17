@@ -1,4 +1,4 @@
-<?php													$WHEEL['version'] = '14.05.14';
+<?php													$WHEEL['version'] = '14.05.17';
 	/*
 		WHEEL : Light php framework					By MicCarr 	< miccarr@me.com >
 		-------------------------------
@@ -17,16 +17,18 @@
 	include('./core/controllers.php');
 	include('./core/session.php');
 	include('./core/helper.php');
+	include('./core/render.php');
 	
 
-	$_['output'] = wheel_Router::route( $_SERVER['REQUEST_URI'] );
+	$_['stdOut'] = wheel_Router::route( $_SERVER['REQUEST_URI'] );
 	ob_end_clean();
 
 	if($_['config']['core']['debug']){
 		$_['error']->showErrors();
 	}
 
-	if(!$_['controller']->isRendered){
-		echo $_['output'];
-	}
+	if($_['controller']->render)
+		echo $_['controller']->render;
+	else
+		echo $_['stdOut'];
 ?>

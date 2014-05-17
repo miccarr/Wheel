@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+	<head>
+		<title>{{title}}</title>
+		<meta name="generator" content="wheelPHP" />
+		{{#css}}
+			<link rel="stylesheet" href="{{.}}" type="text/css" />
+		{{/css}}
+	</head>
+	<body>
+		{{{body}}}
+		{{#js}}
+			<script src="{{.}}" language="javascript"></script>
+		{{/js}}
+	</body>
+</html>
