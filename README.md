@@ -34,6 +34,10 @@ From controllers, **$_[xxx]** may be replaced by **$this->xxx**.
 |...| /views/\*Controller | Views about the controller \* |
 |.. | /web | Put all your files, images, etc... there |
 
+#Debug system#
+
+Just put ***?debug*** at the end of your page url
+
 #Database access methods#
 
 Foreign keys must be named like *tableName* \_ *fieldName*

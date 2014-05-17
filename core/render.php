@@ -20,10 +20,17 @@
 
 
 	// Add the helpers
-	$_['mustache']->addHelper('WHEELBASE', function($text ='', $mustache = null) {
+	$_['mustache']->addHelper('WHEELURL', function($text ='', $mustache = null) {
+		if (isset($_GET['debug'])){
+			if(strcontains($text, '?') AND )
+				$debug = '&debug';
+			else
+				$debug = '?debug';
+		}else
+			$debug = '';
 		if(startWith($text,'/'))
-			return substr($_SERVER['PHP_SELF'],0,-10).$text;
-		return substr($_SERVER['PHP_SELF'],0,-9).$text;
+			return substr($_SERVER['PHP_SELF'],0,-10).$text.$debug;
+		return substr($_SERVER['PHP_SELF'],0,-9).$text.$debug;
 	});
 
 ?>
