@@ -27,8 +27,8 @@
 		$_['error']->showErrors();
 	}
 
-	if($_['controller']->render)
+	if(!empty($_['controller']->render))
 		echo $_['controller']->render;
 	else
-		echo $_['stdOut'];
+		echo $_['controller']->min($_['stdOut']);
 ?>

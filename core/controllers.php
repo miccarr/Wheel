@@ -9,12 +9,13 @@
 		// Desactive the controller if not in DEBUG mode
 		public $debugOnly = false;
 		public $render = null;
-		private $_view = null;
-		private $_layout = 'default';
+		protected $_view = null;
+		protected $_layout = 'default';
 
 		public function __construct($action){
 			$this->error->log("WHEEL : Constructing the controller '".get_class($this)."'");
-			$this->_view = get_class($this).'/'.$action;
+			if(empty($this->_view))
+				$this->_view = get_class($this).'/'.$action;
 		}
 
 		public function __get($varName){
@@ -26,8 +27,6 @@
 		}
 
 		public function render( $data = array(), $view = null, $layout = null){
-			global $_;
-
 			$data = rawData($data);
 
 			if(empty($view))
@@ -36,12 +35,35 @@
 			if($layout==null)
 				$layout = $this->_layout;
 
-			$this->render = $_['mustache']->render($view, $data);
-
-			if(!empty($layout)){
-				$data = array_merge($data, array('body'=>$this->render));
-				$this->render = $_['mustache']->render('layouts/'.$layout, $data);
+			// Apply template
+			if(is_file('./views/'.$view.'.html')){
+				$this->error->log("WHEEL : Rendering with view '".$view."'");
+				$this->render = $this->mustache->render($view, $data);
+			}else{
+				$this->error->error("WHEEL : Render asked, but view '".$view.".html' not found.");
 			}
+			
+			// If layout refer to a file
+			if(!empty($layout) AND is_file('./views/layouts/'.$layout.'.html')){
+				$this->error->log("WHEEL : Rendering layout '".$layout."'");
+				$data = array_merge($data, array('body'=>$this->render));
+				$this->render = $this->mustache->render('layouts/'.$layout, $data);
+			}
+
+			// Minify render
+			if(!$this->config['core']['debug'])
+				$this->render = $this->min($this->render);
+		}
+
+		public function min($html){
+			// If config to false, just return
+			if(!$this->config['render']['minify'])
+				return $html;
+
+			$this->error->log("WHEEL : Minify");
+			$html = str_replace("\t", '', $html);
+			$html = str_replace("\n", '', $html);
+			return $html;
 		}
 	}
 ?>

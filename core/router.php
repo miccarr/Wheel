@@ -133,6 +133,8 @@
 				// Call action
 				if(method_exists($_['controller'], $action)){
 					$_['controller']->$action($options);
+				}elseif(method_exists($_['controller'], '__call')){
+					$_['controller']->$action($options);
 				}else{
 					$_['controller'] = $_['config']['routes']['fallback']['controller'];
 					if(method_exists($_['controller'], $_['config']['routes']['fallback']['action']))

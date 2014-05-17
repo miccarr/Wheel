@@ -1,0 +1,7 @@
+#   WHEEL > Config > Render
+#   -----------------------
+#
+#   Rendering config (mustache)
+
+minify: true
+cache: true

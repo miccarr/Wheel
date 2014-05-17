@@ -7,39 +7,53 @@
 
 	// Main class
 	class wheel_DatabaseConnect {
-		private $_handler;
+		private $_handler = null;
 		public $cache;
+		public $configName;
 
-		public function __construct($configName){
-			$this->connect($configName);
+		public function __construct($configName = null){
+			global $_;
+			if(!empty($configName))
+				$this->configName = $configName;
+
+			if(empty($this->configName))
+				$this->configName = $_['config']['databases']['defaultConfig'];
 		}
 
 		// Try to connect to the database
 		public function connect($configName = null){
 			global $_;
 
-			if(isset($_['config']['databases'][$configName])){
-				$config = new wheel_DatabaseConfig($_['config']['databases'][$configName]);
+			if(!empty($configName))
+				$this->configName = $configName;
+			
+			if($this->_handler == null){
+				if(isset($_['config']['databases'][$this->configName])){
+					$config = new wheel_DatabaseConfig($_['config']['databases'][$this->configName]);
 
-				@$this->_handler = new mysqli($config->host, $config->user, $config->pass, $config->dbname);
-			}else{
-				$_["error"]->error("WHEEL : Tryed to use undefined database configuration ('$configName').");
-			}
+					@$this->_handler = new mysqli($config->host, $config->user, $config->pass, $config->dbname);
+				}else{
+					$_["error"]->error("WHEEL : Tryed to use undefined database configuration ('$this->configName').");
+				}
 
-			if(!empty($this->_handler->connect_error)){
-				$error = $this->_handler->connect_error;
-				unset($this->_handler);
-				$this->error = $error;
-				$_["error"]->fatal("WHEEL : Unable to connect to the database ($error).<br />\n");
-			}elseif(!empty($config->encoding)){
-				$this->_handler->set_charset($config->encoding);
-				$_["error"]->log("WHEEL : Connected to the database ('$configName').<br />\n");
+				if(!empty($this->_handler->connect_error)){
+					$error = $this->_handler->connect_error;
+					unset($this->_handler);
+					$this->error = $error;
+					$_["error"]->fatal("WHEEL : Unable to connect to the database ($error).");
+				}elseif(!empty($config->encoding)){
+					$this->_handler->set_charset($config->encoding);
+					$_["error"]->log("WHEEL : Connected to the database ('$configName').");
+				}
 			}
 		}
 
 		// Executes the querry
 		public function sql($query){
 			global $_;
+
+			//Connect if not yet done
+			$this->connect();
 
 			$_["error"]->log("SQL Querry : ".$query);
 
@@ -53,6 +67,7 @@
 		// Load model or creates a generic model if not exists
 		public function __get($table){
 			global $_;
+
 			if(class_exists($table)){
 				$this->table = new $table($table);
 			}elseif(is_file('./models/'.$table.'.php')){

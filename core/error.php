@@ -44,7 +44,7 @@
 						echo "</pre>";
 					}
 				}
-				echo '</td></tr></table>';
+				echo "</td></tr></table>\n";
 			}
 		}
 	}
