@@ -20,7 +20,7 @@
 			global $_;
 
 			if(!is_object($rawResult))
-				$_["error"]->fatal("Fatal error : can't make object without raw result array");
+				$_["error"]->fatal("WHEEL > Model : Can't make object without raw result array");
 
 			$output = array();
 

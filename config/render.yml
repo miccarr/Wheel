@@ -5,3 +5,5 @@
 
 minify: true
 cache: true
+
+default_i18n: 'en'

@@ -30,7 +30,7 @@
 			if(isset($_SESSION[$varName]))
 				return $_SESSION[$varName];
 			else{
-				$_["error"]->info("WHEEL : Tryed to call inexistant session variable('$varName'), returned false .");
+				$_["error"]->info("WHEEL > Session : Tryed to call inexistant session variable('$varName'), returned false .");
 				return false;
 			}
 		}

@@ -20,17 +20,15 @@
 
 
 	// Add the helpers
-	$_['mustache']->addHelper('WHEELURL', function($text ='', $mustache = null) {
-		if (isset($_GET['debug'])){
-			if(strcontains($text, '?'))
-				$debug = '&debug';
-			else
-				$debug = '?debug';
-		}else
-			$debug = '';
-		if(startWith($text,'/'))
-			return substr($_SERVER['PHP_SELF'],0,-10).$text.$debug;
-		return substr($_SERVER['PHP_SELF'],0,-9).$text.$debug;
+	$_['mustache']->addHelper('WHEELURL', function($text ='') {
+		global $_;
+		return $_['helper']->wheelurl($text);
+	});
+
+	// Add the helpers
+	$_['mustache']->addHelper('i18n', function($text ='') {
+		global $_;
+		return $_['helper']->i18n($text);
 	});
 
 ?>

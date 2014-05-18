@@ -56,7 +56,7 @@
 				if($path != 'fallback'){
 					$regex = self::p2regex($path);
 					if(preg_match($regex, $request, $m)){
-						$_["error"]->log("WHEEL : Find route '".$path."' ('".$regex."') for this request.");
+						$_["error"]->log("WHEEL > Router : Find route '".$path."' ('".$regex."') for this request.");
 						return self::match2ca($route, $m);
 					}
 				}
@@ -86,7 +86,7 @@
 				}elseif(is_file('./controllers/'.$controller.$ctrlSuffix.'.php')){
 					include('./controllers/'.$controller.$ctrlSuffix.'.php');
 				}else{
-					$_['error']->fatal("WHEEL : Controller file and fallback '".$controller."(".$ctrlSuffix.").php' not found.");
+					$_['error']->fatal("WHEEL > Router : Controller file and fallback '".$controller."(".$ctrlSuffix.").php' not found.");
 				}
 			}
 		}
@@ -103,7 +103,7 @@
 			$base = substr($_SERVER['PHP_SELF'],0,-10);
 			$request = substr($request, strlen($base));
 
-			$_["error"]->log("WHEEL : Request route for '".$request."'");
+			$_["error"]->log("WHEEL > Router : Request route for '".$request."'");
 
 			// Catch output
 			ob_start();
@@ -132,9 +132,9 @@
 				}elseif( class_exists($controller.'Controller') ){
 					$controller.='Controller';
 				}elseif( class_exists($controller) ){
-					$_['error']->fatal("WHEEL : Please add the suffix '".$_['config']['core']['controllerSuffix']."' to your controller.");
+					$_['error']->fatal("WHEEL > Router : Please add the suffix '".$_['config']['core']['controllerSuffix']."' to your controller.");
 				}else{
-					$_['error']->fatal("WHEEL : Controller file loaded, but can't find '".$controller.$_['config']['core']['controllerSuffix']."' class.");
+					$_['error']->fatal("WHEEL > Router : Controller file loaded, but can't find '".$controller.$_['config']['core']['controllerSuffix']."' class.");
 				}
 
 				$_['controller'] = new $controller($action);

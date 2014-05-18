@@ -13,7 +13,7 @@
 		protected $_layout = 'default';
 
 		public function __construct($action){
-			$this->error->log("WHEEL : Constructing the controller '".get_class($this)."'");
+			$this->error->log("WHEEL > CTRL : Constructing the controller '".get_class($this)."'");
 			if(empty($this->_view))
 				$this->_view = get_class($this).'/'.$action;
 		}
@@ -23,7 +23,7 @@
 			if(isset($_[$varName]))
 				return $_[$varName];
 			else
-				$this->error->error("WHEEL : Tryed to call inexistant property (\$this->'$varName').");
+				$this->error->error("WHEEL > CTRL : Tryed to call inexistant property (\$this->'$varName').");
 		}
 
 		public function render( $data = array(), $view = null, $layout = null){
@@ -37,15 +37,15 @@
 
 			// Apply template
 			if(is_file('./views/'.$view.'.html')){
-				$this->error->log("WHEEL : Rendering with view '".$view."'");
+				$this->error->log("WHEEL > Render : Rendering with view '".$view."'");
 				$this->render = $this->mustache->render($view, $data);
 			}else{
-				$this->error->error("WHEEL : Render asked, but view '".$view.".html' not found.");
+				$this->error->error("WHEEL > Render : View '".$view.".html' not found.");
 			}
 			
 			// If layout refer to a file
 			if(!empty($layout) AND is_file('./views/layouts/'.$layout.'.html')){
-				$this->error->log("WHEEL : Rendering layout '".$layout."'");
+				$this->error->log("WHEEL > Render : Rendering layout '".$layout."'");
 				$data = array_merge($data, array('body'=>$this->render));
 				$this->render = $this->mustache->render('layouts/'.$layout, $data);
 			}
@@ -60,7 +60,7 @@
 			if(!$this->config['render']['minify'])
 				return $html;
 
-			$this->error->log("WHEEL : Minify");
+			$this->error->log("WHEEL > Render : Minify");
 			$html = str_replace("\t", '', $html);
 			$html = str_replace("\n", '', $html);
 			return $html;

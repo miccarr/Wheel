@@ -33,17 +33,17 @@
 
 					@$this->_handler = new mysqli($config->host, $config->user, $config->pass, $config->dbname);
 				}else{
-					$_["error"]->error("WHEEL : Tryed to use undefined database configuration ('$this->configName').");
+					$_["error"]->error("WHEEL > DB : Tryed to use undefined database configuration ('$this->configName').");
 				}
 
 				if(!empty($this->_handler->connect_error)){
 					$error = $this->_handler->connect_error;
 					unset($this->_handler);
 					$this->error = $error;
-					$_["error"]->fatal("WHEEL : Unable to connect to the database ($error).");
+					$_["error"]->fatal("WHEEL > DB : Unable to connect to the database ($error).");
 				}elseif(!empty($config->encoding)){
 					$this->_handler->set_charset($config->encoding);
-					$_["error"]->log("WHEEL : Connected to the database ('$this->configName').");
+					$_["error"]->log("WHEEL > DB : Connected to the database ('$this->configName').");
 				}
 			}
 		}
@@ -98,7 +98,7 @@
 				if(isset($key)){
 					$this->$key = $val;
 				}else{
-					$_["error"]->info("WHEEL : Unknown variable in database config ('$key').");
+					$_["error"]->info("WHEEL > DB : Unknown variable in database config ('$key').");
 				}
 			}
 		}
@@ -145,7 +145,7 @@
 			}
 
 			// If nothing returned
-			$_["error"]->error("WHEEL : Field '$varName' not found.");
+			$_["error"]->error("WHEEL > DB : Field '$varName' not found.");
 			return false;
 		}
 
@@ -232,5 +232,5 @@
 		$_['db'] = new wheel_DatabaseConnect($_['config']['databases']['defaultConfig']);
 		$_['database'] = &$_['db'];
 	}else{
-		$_["error"]->info("WHEEL : No default database config, no autoLoad .");
+		$_["error"]->info("WHEEL > DB : No default database config, no autoLoad .");
 	}
