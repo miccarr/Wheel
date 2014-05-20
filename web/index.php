@@ -1,4 +1,4 @@
-<?php													$WHEEL['version'] = '14.05.17';
+<?php													$WHEEL['version'] = '14.05.20';
 	/*
 		WHEEL : Light php framework					By MicCarr 	< miccarr@me.com >
 		-------------------------------
