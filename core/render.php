@@ -7,7 +7,7 @@
 
 
 	// Include and load
-	include('./lib/Mustache/Autoloader.php');
+	include('../lib/Mustache/Autoloader.php');
 	Mustache_Autoloader::register();
 
 	// Setting options

@@ -7,17 +7,17 @@
 	
 
 	// Loading the WHEEL core
-	include('./core/easyFunctions.php');
-	include('./core/config.php');
-	include('./core/debug.php');
-	include('./core/error.php');
-	include('./core/router.php');
-	include('./core/database.php');
-	include('./core/models.php');
-	include('./core/controllers.php');
-	include('./core/session.php');
-	include('./core/helper.php');
-	include('./core/render.php');
+	include('../core/easyFunctions.php');
+	include('../core/config.php');
+	include('../core/debug.php');
+	include('../core/error.php');
+	include('../core/router.php');
+	include('../core/database.php');
+	include('../core/models.php');
+	include('../core/controllers.php');
+	include('../core/session.php');
+	include('../core/helper.php');
+	include('../core/render.php');
 	
 
 	$_['stdOut'] = wheel_Router::route( $_SERVER['REQUEST_URI'] );

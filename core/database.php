@@ -70,8 +70,8 @@
 
 			if(class_exists($table)){
 				$this->table = new $table($table);
-			}elseif(is_file('./models/'.$table.'.php')){
-				require_once('./models/'.$table.'.php');
+			}elseif(is_file('../models/'.$table.'.php')){
+				require_once('../models/'.$table.'.php');
 				$this->table = new $table($table);
 			}else{
 				$this->$table = new Models($table);

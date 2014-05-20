@@ -36,7 +36,7 @@
 				$layout = $this->_layout;
 
 			// Apply template
-			if(is_file('./views/'.$view.'.html')){
+			if(is_file('../views/'.$view.'.html')){
 				$this->error->log("WHEEL > Render : Rendering with view '".$view."'");
 				$this->render = $this->mustache->render($view, $data);
 			}else{
@@ -44,7 +44,7 @@
 			}
 			
 			// If layout refer to a file
-			if(!empty($layout) AND is_file('./views/layouts/'.$layout.'.html')){
+			if(!empty($layout) AND is_file('../views/layouts/'.$layout.'.html')){
 				$this->error->log("WHEEL > Render : Rendering layout '".$layout."'");
 				$data = array_merge($data, array('body'=>$this->render));
 				$this->render = $this->mustache->render('layouts/'.$layout, $data);

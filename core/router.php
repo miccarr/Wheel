@@ -70,21 +70,21 @@
 			$ctrlSuffix = $_['config']['core']['controllerSuffix'];
 
 			// Try with controllerSuffix (.php , .inc.php and .class.php)
-			if(is_file('./controllers/'.$controller.$ctrlSuffix.'.php')){
-				include('./controllers/'.$controller.$ctrlSuffix.'.php');
+			if(is_file('../controllers/'.$controller.$ctrlSuffix.'.php')){
+				include('../controllers/'.$controller.$ctrlSuffix.'.php');
 			}
 			// Try without controllerSuffix
-			elseif(is_file('./controllers/'.$controller.'.php')){
-				include('./controllers/'.$controller.'.php');
+			elseif(is_file('../controllers/'.$controller.'.php')){
+				include('../controllers/'.$controller.'.php');
 			}
 			// If controller file not foud
 			else{
 				$_['error']->error("WHEEL : Controller file '".$controller."(".$ctrlSuffix.").php' not found.");
 				$controller = $_['config']['routes']['fallback']['controller'];
-				if(is_file('./controllers/'.$controller.'.php')){
-					include('./controllers/'.$controller.'.php');
-				}elseif(is_file('./controllers/'.$controller.$ctrlSuffix.'.php')){
-					include('./controllers/'.$controller.$ctrlSuffix.'.php');
+				if(is_file('../controllers/'.$controller.'.php')){
+					include('../controllers/'.$controller.'.php');
+				}elseif(is_file('../controllers/'.$controller.$ctrlSuffix.'.php')){
+					include('../controllers/'.$controller.$ctrlSuffix.'.php');
 				}else{
 					$_['error']->fatal("WHEEL > Router : Controller file and fallback '".$controller."(".$ctrlSuffix.").php' not found.");
 				}
@@ -100,7 +100,7 @@
 				list($request, $gets) = explode('?', $request, 2);
 
 			// Removing base directories
-			$base = substr($_SERVER['PHP_SELF'],0,-10);
+			$base = substr($_SERVER['PHP_SELF'],0,-14);
 			$request = substr($request, strlen($base));
 
 			$_["error"]->log("WHEEL > Router : Request route for '".$request."'");
@@ -142,13 +142,18 @@
 				if(isset($_['controller'])){
 					// Call action
 					if(method_exists($_['controller'], $action)){
+						$_['error']->log("WHEEL > CTRL : Call action '$action'.");
 						$_['controller']->$action($options);
 					}elseif(method_exists($_['controller'], '__call')){
+						$_['error']->log("WHEEL > CTRL : Call action '$action' via the magic __call method.");
 						$_['controller']->$action($options);
 					}else{
+						$_['error']->error("WHEEL > CTRL : Action not found, calling fallback.");
 						$_['controller'] = $_['config']['routes']['fallback']['controller'];
 						if(method_exists($_['controller'], $_['config']['routes']['fallback']['action']))
 							$_['controller']->$_['config']['routes']['fallback']['action']($options);
+						else
+							$_['error']->fatal("WHEEL > CTRL : Fallback action not found.");
 					}
 				}
 			}
@@ -157,9 +162,9 @@
 		}
 
 		static private function sass($file){
-			include('./lib/scss.php');
-			$sass = new scss_server('./views/styles/', './views/cache/');
-			$sass->serve('', './views/styles/'.$file);
+			include('../lib/scss.php');
+			$sass = new scss_server('../views/styles/', '../views/cache/');
+			$sass->serve('', '../views/styles/'.$file);
 		}
 	}
 ?>

@@ -40,7 +40,7 @@
 				foreach($_ as $key => $content){
 					if(($key != 'error' AND $key != 'db' AND $key != 'mustache') OR $_GET['debug']=='true'){
 						echo "<h2>$key</h2><pre>";
-						var_dump($_[$key]);
+						print_r($_[$key]);
 						echo "</pre>";
 					}
 				}

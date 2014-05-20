@@ -17,8 +17,8 @@
 			}else
 				$debug = '';
 			if(startWith($text,'/'))
-				return substr($_SERVER['PHP_SELF'],0,-10).$text.$debug;
-			return substr($_SERVER['PHP_SELF'],0,-9).$text.$debug;
+				return substr($_SERVER['PHP_SELF'],0,-14).$text.$debug;
+			return substr($_SERVER['PHP_SELF'],0,-13).$text.$debug;
 		}
 
 		public function i18n($text = '', $lang = null){
@@ -36,7 +36,7 @@
 			global $_;
 
 			if(!empty($lang)){
-				if(is_file('./views/langs/'.$lang.'.yml')){
+				if(is_file('../views/langs/'.$lang.'.yml')){
 					$this->_file = Spyc::YAMLLoad('./views/langs/'.$lang.'.yml');
 					if(empty($this->_file))
 						$_["error"]->error("WHEEL > I18N : The file '$lang.yml' is corrupted.");
@@ -46,7 +46,7 @@
 				return true;
 			}
 			foreach($this->_detectLangs() as $lang){
-				if(is_file('./views/langs/'.$lang.'.yml')){
+				if(is_file('../views/langs/'.$lang.'.yml')){
 					$this->_file = Spyc::YAMLLoad('./views/langs/'.$lang.'.yml');
 					if(empty($this->_file))
 						$_["error"]->error("WHEEL > I18N : The file '$lang.yml' is corrupted.");
