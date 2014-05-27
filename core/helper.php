@@ -47,7 +47,7 @@
 			}
 			foreach($this->_detectLangs() as $lang){
 				if(is_file('../views/langs/'.$lang.'.yml')){
-					$this->_file = Spyc::YAMLLoad('./views/langs/'.$lang.'.yml');
+					$this->_file = Spyc::YAMLLoad('../views/langs/'.$lang.'.yml');
 					if(empty($this->_file))
 						$_["error"]->error("WHEEL > I18N : The file '$lang.yml' is corrupted.");
 					else
